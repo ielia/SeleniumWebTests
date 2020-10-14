@@ -10,6 +10,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,6 +53,9 @@ public class MainTest {
         WebDriverManager.chromedriver().setup();
         logTime("<><><><><><><><><><> PREPARATION", start);
         start = new Date().getTime();
+        DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+        Map<String, Object> perfLoggingPrefs = Map.of("enableNetwork", true);
+        capabilities.setCapability("perfLoggingPrefs", "{\"enableNetwork\":true}");
         driver = new ChromeDriver();
         logTime("<><><><><><><><><><> DRIVER CREATION", start);
         testStartTime = new Date().getTime();
