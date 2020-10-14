@@ -6,8 +6,9 @@ import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,12 +30,10 @@ public class MainTest {
 
     static Stream<Arguments> localParameters() {
         return Stream.of(
-            Arguments.of("http://www.microsoft.com/"),
+            Arguments.of("http://www.bing.com/"),
             Arguments.of("https://www.google.com/")
         );
     }
-
-    public MainTest() {}
 
     protected void logTime(String category, long startTime) {
         long timespan = new Date().getTime() - startTime;
@@ -48,12 +47,13 @@ public class MainTest {
     @BeforeEach
     public void beforeEach(TestInfo testInfo) {
         this.testInfo = testInfo;
+        // System.setProperty("webdriver.chrome.verboseLogging", "true");
         long start = new Date().getTime();
         WebDriverManager.chromedriver().setup();
-        logTime("PREPARATION", start);
+        logTime("<><><><><><><><><><> PREPARATION", start);
         start = new Date().getTime();
         driver = new ChromeDriver();
-        logTime("DRIVER CREATION", start);
+        logTime("<><><><><><><><><><> DRIVER CREATION", start);
         testStartTime = new Date().getTime();
     }
 
@@ -62,31 +62,34 @@ public class MainTest {
     public void test1(String url) {
         long start = new Date().getTime();
         driver.get("data:,");
-        //log.info("TITLE: {}", driver.getTitle());
-        logTime("WINDOW OPEN", start);
+        //log.info("<><><><><><><><><><> TITLE: {}", driver.getTitle());
+        logTime("<><><><><><><><><><> WINDOW OPEN", start);
         start = new Date().getTime();
         driver.get(url);
-        logTime("URL OPEN", start);
+        logTime("<><><><><><><><><><> URL OPEN", start);
     }
 
     @ParameterizedTest(name = "[{index}] => {0}")
     @MethodSource("localParameters")
     public void test2(String url) {
         long start = new Date().getTime();
-        driver.get("data:,");
-        //log.info("TITLE: {}", driver.getTitle());
-        logTime("MY WINDOW OPEN", start);
-        start = new Date().getTime();
         driver.get(url);
-        logTime("MY URL OPEN", start);
+        logTime("<><><><><><><><><><> MY URL OPEN", start);
+        start = new Date().getTime();
+        WebElement q = driver.findElement(By.name("q"));
+        logTime("<><><><><><><><><><> GOT ELEMENT", start);
+        start = new Date().getTime();
+        String classList = q.getAttribute("class");
+        logTime("<><><><><><><><><><> GOT ATTRIBUTE", start);
+        log.info("<><><><><><><><><><> Class name: {}", classList);
     }
 
     @AfterEach
     public void afterEach() {
-        logTime("TEST RUN", testStartTime);
+        logTime("<><><><><><><><><><> TEST RUN", testStartTime);
         long start = new Date().getTime();
         driver.quit();
-        logTime("DRIVER QUIT", start);
+        logTime("<><><><><><><><><><> DRIVER QUIT", start);
     }
 
     @AfterAll
